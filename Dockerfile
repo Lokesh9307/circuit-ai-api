@@ -8,11 +8,11 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project files
+# Copy source
 COPY . .
 
-# Expose FastAPI port
+# Expose Cloud Run port (optional, Cloud Run injects PORT anyway)
 EXPOSE 8080
 
-# Run FastAPI with Uvicorn (recommended for Cloud Run)
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080"]
+# Start FastAPI with uvicorn
+CMD exec uvicorn main:app --host 0.0.0.0 --port ${PORT:-8080}
