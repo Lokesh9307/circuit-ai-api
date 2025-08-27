@@ -46,27 +46,18 @@ async def health():
     return {"ok": True, "gemini": bool(os.getenv("GEMINI_API_KEY"))}
 
 def upload_to_gcs(local_file: Path, bucket_name: str) -> str:
-    """Uploads file to GCS and returns signed URL (works on Cloud Run without GOOGLE_APPLICATION_CREDENTIALS)."""
-    try:
-        # Use ADC (Application Default Credentials)
-        storage_client = storage.Client()
-        bucket = storage_client.bucket(bucket_name)
+    storage_client = storage.Client()
+    bucket = storage_client.bucket(bucket_name)
 
-        # unique filename
-        blob_name = f"circuit_images/{uuid.uuid4().hex}.png"
-        blob = bucket.blob(blob_name)
-        blob.upload_from_filename(str(local_file))
+    blob_name = f"circuit_images/{uuid.uuid4().hex}.png"
+    blob = bucket.blob(blob_name)
+    blob.upload_from_filename(str(local_file))
 
-        # Generate signed URL (valid for 1 hour)
-        url = blob.generate_signed_url(
-            version="v4",
-            expiration=3600,  # seconds
-            method="GET"
-        )
-        return url
-    except Exception as e:
-        print(f"❌ GCS upload error: {e}")
-        return ""
+    # Make file public
+    blob.make_public()
+
+    return blob.public_url
+
 
 
 
