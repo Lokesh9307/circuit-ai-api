@@ -51,7 +51,8 @@ def upload_to_gcs(local_file: Path, bucket_name: str) -> str:
     if not os.getenv("GOOGLE_APPLICATION_CREDENTIALS"):
         raise ValueError("GOOGLE_APPLICATION_CREDENTIALS not set")
     
-    storage_client = storage.Client.from_service_account_json(os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
+    # storage_client = storage.Client.from_service_account_json(os.getenv("GOOGLE_APPLICATION_CREDENTIALS"))
+    storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
     # unique filename
