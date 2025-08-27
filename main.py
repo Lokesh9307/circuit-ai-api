@@ -53,12 +53,8 @@ def upload_to_gcs(local_file: Path, bucket_name: str) -> str:
     blob = bucket.blob(blob_name)
     blob.upload_from_filename(str(local_file))
 
-    # Make file public
-    blob.make_public()
-
-    return blob.public_url
-
-
+    # Return direct public URL (works with UBLA)
+    return f"https://storage.googleapis.com/{bucket_name}/{blob_name}"
 
 
 @app.post("/generate")
