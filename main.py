@@ -49,21 +49,15 @@ def upload_to_gcs(local_file: Path, bucket_name: str) -> str:
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
+    # Unique file path inside folder
     blob_name = f"circuit_images/{uuid.uuid4().hex}.png"
     blob = bucket.blob(blob_name)
 
     # Upload file
     blob.upload_from_filename(str(local_file))
 
-    # Generate signed URL (valid for 1 hour)
-    url = blob.generate_signed_url(
-        version="v4",
-        expiration=timedelta(hours=1),
-        method="GET",
-        service_account_email="117429664165-compute@developer.gserviceaccount.com",
-    )
-
-    return url
+    # Return public URL (works because bucket is public)
+    return f"https://storage.googleapis.com/{bucket_name}/{blob_name}"
 
 
 @app.post("/generate")
