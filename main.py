@@ -60,6 +60,7 @@ def upload_to_gcs(local_file: Path, bucket_name: str) -> str:
         version="v4",
         expiration=timedelta(hours=1),
         method="GET",
+        service_account_email="117429664165-compute@developer.gserviceaccount.com",
     )
 
     return url
