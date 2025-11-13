@@ -33,7 +33,7 @@ def call_gemini_for_netlist(prompt_text: str) -> Optional[Dict[str, Any]]:
         return None
     try:
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-2.5-flash")
         sys_prompt = (
             "You are a netlist generator. Return ONLY JSON with keys 'components' and 'connections', "
             "and a short 'explanation'. Each component: {id, type, value?, model?}. For microcontrollers include "
